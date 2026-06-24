@@ -25,6 +25,23 @@
 			}, 100);
 		});
 
+	// Contact form tracking.
+		$('#footer form').on('submit', function() {
+			if (typeof pendo !== 'undefined' && pendo.track) {
+				var $form = $(this);
+				var nameVal = $form.find('input[name="name"]').val() || '';
+				var emailVal = $form.find('input[name="email"]').val() || '';
+				var messageVal = $form.find('textarea[name="message"]').val() || '';
+				pendo.track('contact_form_submitted', {
+					page_source: window.location.pathname,
+					has_name: nameVal.length > 0,
+					has_email: emailVal.length > 0,
+					has_message: messageVal.length > 0,
+					message_length: messageVal.length
+				});
+			}
+		});
+
 	// Dropdowns.
 		$('#nav > ul').dropotron({
 			mode: 'fade',
