@@ -12,12 +12,6 @@
     y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
     z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
 })('8befc6a2-1bc6-4aba-a41c-2d29c6a719a3');
-
-pendo.initialize({
-    visitor: {
-        id: ''
-    }
-});
 		</script>
 		<style>
 			* {
@@ -79,35 +73,97 @@ pendo.initialize({
 			h2 {
 				margin-top: 0;
 			}
+
+			#login-screen {
+				min-height: 100vh;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			#login-screen .page {
+				display: block;
+				width: 100%;
+				max-width: 360px;
+			}
+
+			#login-screen label {
+				display: block;
+				font-size: 0.9rem;
+				margin-bottom: 0.5rem;
+			}
+
+			#login-screen input {
+				width: 100%;
+				padding: 0.6rem 0.75rem;
+				font-size: 1rem;
+				border: 1px solid #d1d5db;
+				border-radius: 6px;
+				margin-bottom: 1rem;
+			}
+
+			#login-screen button {
+				width: 100%;
+				padding: 0.6rem 0.75rem;
+				font-size: 1rem;
+				background: #2563eb;
+				color: #fff;
+				border: none;
+				border-radius: 6px;
+				cursor: pointer;
+			}
+
+			#login-screen button:hover {
+				background: #1d4ed8;
+			}
+
+			#app {
+				display: none;
+			}
 		</style>
 	</head>
 	<body>
-		<nav>
-			<button type="button" class="nav-link active" data-page="page-home">Home</button>
-			<button type="button" class="nav-link" data-page="page-two">Page 2</button>
-			<button type="button" class="nav-link" data-page="page-three">Page 3</button>
-		</nav>
-
-		<main>
-			<section id="page-home" class="page active">
-				<h2>Main Page</h2>
-				<p>Welcome to the main page of this single-page application. Use the navigation bar above to switch between pages without the URL ever changing.</p>
+		<div id="login-screen">
+			<section class="page active">
+				<h2>Login</h2>
+				<form id="login-form">
+					<label for="visitor-id">Visitor ID</label>
+					<input type="text" id="visitor-id" name="visitor-id" placeholder="Enter your visitor ID" autocomplete="off" required />
+					<button type="submit">Log In</button>
+				</form>
 			</section>
+		</div>
 
-			<section id="page-two" class="page">
-				<h2>Page 2</h2>
-				<p>This is the content for page 2. Replace this placeholder text with whatever content you'd like here.</p>
-			</section>
+		<div id="app">
+			<nav>
+				<button type="button" class="nav-link active" data-page="page-home">Home</button>
+				<button type="button" class="nav-link" data-page="page-two">Page 2</button>
+				<button type="button" class="nav-link" data-page="page-three">Page 3</button>
+			</nav>
 
-			<section id="page-three" class="page">
-				<h2>Page 3</h2>
-				<p>This is the content for page 3. Replace this placeholder text with whatever content you'd like here.</p>
-			</section>
-		</main>
+			<main>
+				<section id="page-home" class="page active">
+					<h2>Main Page</h2>
+					<p>Welcome to the main page of this single-page application. Use the navigation bar above to switch between pages without the URL ever changing.</p>
+				</section>
+
+				<section id="page-two" class="page">
+					<h2>Page 2</h2>
+					<p>This is the content for page 2. Replace this placeholder text with whatever content you'd like here.</p>
+				</section>
+
+				<section id="page-three" class="page">
+					<h2>Page 3</h2>
+					<p>This is the content for page 3. Replace this placeholder text with whatever content you'd like here.</p>
+				</section>
+			</main>
+		</div>
 
 		<script>
-			var navLinks = document.querySelectorAll('.nav-link');
-			var pages = document.querySelectorAll('.page');
+			var loginScreen = document.getElementById('login-screen');
+			var app = document.getElementById('app');
+			var navLinks = app.querySelectorAll('.nav-link');
+			var pages = app.querySelectorAll('.page');
 
 			navLinks.forEach(function (link) {
 				link.addEventListener('click', function () {
@@ -121,6 +177,21 @@ pendo.initialize({
 						navLink.classList.toggle('active', navLink === link);
 					});
 				});
+			});
+
+			document.getElementById('login-form').addEventListener('submit', function (event) {
+				event.preventDefault();
+
+				var visitorId = document.getElementById('visitor-id').value.trim();
+
+				pendo.initialize({
+					visitor: {
+						id: visitorId
+					}
+				});
+
+				loginScreen.style.display = 'none';
+				app.style.display = 'block';
 			});
 		</script>
 	</body>
