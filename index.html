@@ -74,6 +74,14 @@
 				margin-top: 0;
 			}
 
+			.page img {
+				display: block;
+				width: 100%;
+				max-width: 100%;
+				border-radius: 6px;
+				margin-bottom: 1rem;
+			}
+
 			#login-screen {
 				min-height: 100vh;
 				display: flex;
@@ -144,16 +152,19 @@
 			<main>
 				<section id="page-home" class="page active">
 					<h2>Main Page</h2>
+					<img data-src="https://picsum.photos/seed/home/600/300" alt="Generic banner image" />
 					<p>Welcome to the main page of this single-page application. Use the navigation bar above to switch between pages without the URL ever changing.</p>
 				</section>
 
 				<section id="page-two" class="page">
 					<h2>Page 2</h2>
+					<img data-src="https://picsum.photos/seed/page2/600/300" alt="Generic banner image" />
 					<p>This is the content for page 2. Replace this placeholder text with whatever content you'd like here.</p>
 				</section>
 
 				<section id="page-three" class="page">
 					<h2>Page 3</h2>
+					<img data-src="https://picsum.photos/seed/page3/600/300" alt="Generic banner image" />
 					<p>This is the content for page 3. Replace this placeholder text with whatever content you'd like here.</p>
 				</section>
 			</main>
@@ -165,12 +176,25 @@
 			var navLinks = app.querySelectorAll('.nav-link');
 			var pages = app.querySelectorAll('.page');
 
+			function reloadPageImage(page) {
+				var img = page.querySelector('img[data-src]');
+
+				if (img) {
+					img.src = img.getAttribute('data-src') + '?t=' + Date.now();
+				}
+			}
+
 			navLinks.forEach(function (link) {
 				link.addEventListener('click', function () {
 					var targetId = link.getAttribute('data-page');
 
 					pages.forEach(function (page) {
-						page.classList.toggle('active', page.id === targetId);
+						var isTarget = page.id === targetId;
+						page.classList.toggle('active', isTarget);
+
+						if (isTarget) {
+							reloadPageImage(page);
+						}
 					});
 
 					navLinks.forEach(function (navLink) {
@@ -192,6 +216,8 @@
 
 				loginScreen.style.display = 'none';
 				app.style.display = 'block';
+
+				reloadPageImage(document.getElementById('page-home'));
 			});
 		</script>
 	</body>
