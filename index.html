@@ -200,6 +200,17 @@
 					navLinks.forEach(function (navLink) {
 						navLink.classList.toggle('active', navLink === link);
 					});
+
+					pendo.location.addTransforms([
+						{
+							attr: 'search',
+							action: 'AddTo',
+							data: function () {
+								var h2 = document.querySelector('h2');
+								return h2 ? { title: h2.innerText.trim() } : {};
+							}
+						}
+					]);
 				});
 			});
 
@@ -211,19 +222,6 @@
 				pendo.initialize({
 					visitor: {
 						id: visitorId
-					},
-					// ...your existing options (publicAppId/apiKey, visitor, account, etc.)...
-					location: {
-						transforms: [
-							{
-								attr: 'search',
-								action: 'AddTo',
-								data: function () {
-									var h2 = document.querySelector('h2');
-									return h2 ? { title: h2.innerText.trim() } : {};
-								}
-							}
-						]
 					}
 				});
 
