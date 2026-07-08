@@ -59,15 +59,10 @@
 			}
 
 			.page {
-				display: none;
 				background: #fff;
 				border-radius: 8px;
 				padding: 2rem;
 				box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-			}
-
-			.page.active {
-				display: block;
 			}
 
 			h2 {
@@ -149,68 +144,80 @@
 				<button type="button" class="nav-link" data-page="page-three">Page 3</button>
 			</nav>
 
-			<main>
-				<section id="page-home" class="page active">
-					<h2>Main Page</h2>
-					<img data-src="https://picsum.photos/seed/home/600/300" alt="Generic banner image" />
-					<p>Welcome to the main page of this single-page application. Use the navigation bar above to switch between pages without the URL ever changing.</p>
-				</section>
-
-				<section id="page-two" class="page">
-					<h2>Page 2</h2>
-					<img data-src="https://picsum.photos/seed/page2/600/300" alt="Generic banner image" />
-					<p>This is the content for page 2. Replace this placeholder text with whatever content you'd like here.</p>
-				</section>
-
-				<section id="page-three" class="page">
-					<h2>Page 3</h2>
-					<img data-src="https://picsum.photos/seed/page3/600/300" alt="Generic banner image" />
-					<p>This is the content for page 3. Replace this placeholder text with whatever content you'd like here.</p>
-				</section>
-			</main>
+			<main id="page-content"></main>
 		</div>
 
 		<script>
 			var loginScreen = document.getElementById('login-screen');
 			var app = document.getElementById('app');
 			var navLinks = app.querySelectorAll('.nav-link');
-			var pages = app.querySelectorAll('.page');
+			var pageContent = document.getElementById('page-content');
 
-			function reloadPageImage(page) {
-				var img = page.querySelector('img[data-src]');
-
-				if (img) {
-					img.src = img.getAttribute('data-src') + '?t=' + Date.now();
+			var pages = {
+				'page-home': {
+					title: 'Main Page',
+					image: 'https://picsum.photos/seed/home/600/300',
+					text: 'Welcome to the main page of this single-page application. Use the navigation bar above to switch between pages without the URL ever changing.'
+				},
+				'page-two': {
+					title: 'Page 2',
+					image: 'https://picsum.photos/seed/page2/600/300',
+					text: 'This is the content for page 2. Replace this placeholder text with whatever content you\'d like here.'
+				},
+				'page-three': {
+					title: 'Page 3',
+					image: 'https://picsum.photos/seed/page3/600/300',
+					text: 'This is the content for page 3. Replace this placeholder text with whatever content you\'d like here.'
 				}
+			};
+
+			function renderPage(pageId) {
+				var data = pages[pageId];
+
+				if (!data) {
+					return;
+				}
+
+				var section = document.createElement('section');
+				section.id = pageId;
+				section.className = 'page';
+
+				var heading = document.createElement('h2');
+				heading.textContent = data.title;
+
+				var image = document.createElement('img');
+				image.alt = 'Generic banner image';
+				image.src = data.image + '?t=' + Date.now();
+
+				var paragraph = document.createElement('p');
+				paragraph.textContent = data.text;
+
+				section.appendChild(heading);
+				section.appendChild(image);
+				section.appendChild(paragraph);
+
+				pageContent.innerHTML = '';
+				pageContent.appendChild(section);
+
+				pendo.location.addTransforms([
+					{
+						attr: 'search',
+						action: 'AddTo',
+						data: function () {
+							var h2 = document.querySelector('h2');
+							return h2 ? { title: h2.innerText.trim() } : {};
+						}
+					}
+				]);
 			}
 
 			navLinks.forEach(function (link) {
 				link.addEventListener('click', function () {
-					var targetId = link.getAttribute('data-page');
-
-					pages.forEach(function (page) {
-						var isTarget = page.id === targetId;
-						page.classList.toggle('active', isTarget);
-
-						if (isTarget) {
-							reloadPageImage(page);
-						}
-					});
+					renderPage(link.getAttribute('data-page'));
 
 					navLinks.forEach(function (navLink) {
 						navLink.classList.toggle('active', navLink === link);
 					});
-
-					pendo.location.addTransforms([
-						{
-							attr: 'search',
-							action: 'AddTo',
-							data: function () {
-								var h2 = document.querySelector('h2');
-								return h2 ? { title: h2.innerText.trim() } : {};
-							}
-						}
-					]);
 				});
 			});
 
@@ -228,7 +235,7 @@
 				loginScreen.style.display = 'none';
 				app.style.display = 'block';
 
-				reloadPageImage(document.getElementById('page-home'));
+				renderPage('page-home');
 			});
 		</script>
 	</body>
