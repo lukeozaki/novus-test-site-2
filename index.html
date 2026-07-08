@@ -200,6 +200,7 @@
 				pageContent.appendChild(section);
 
 				pendo.location.addTransforms([
+					{ attr: 'search', action: 'ExcludeKeys', data: ['title'] },
 					{
 						attr: 'search',
 						action: 'AddTo',
